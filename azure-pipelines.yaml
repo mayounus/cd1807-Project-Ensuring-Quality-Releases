@@ -210,8 +210,8 @@ stages:
   - deployment: VMDeploy
     displayName: Selenium Tests
     environment:
-      #name:    test-vm     # ToDo: Change/provide a name
-      name:    myLinuxVM
+      name:    test-vm     # ToDo: Change/provide a name
+      
       resourceType: VirtualMachine
       tags: selenium
     strategy:
