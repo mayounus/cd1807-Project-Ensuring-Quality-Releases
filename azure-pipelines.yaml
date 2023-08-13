@@ -211,7 +211,7 @@ stages:
               tar -xf apache-jmeter-5.6.2.tgz
               unzip -o $(Build.BuildId)-perftests.zip
               ./apache-jmeter-5.6.2/bin/jmeter -n -t UdacityStest.jmx -j jmeter.log -l stress_results.log -f -e -o Dashboard
-                cat jmeter.log 
+              cat jmeter.log 
             workingDirectory: '$(Pipeline.Workspace)/drop-perftests'            # ToDo: Use the artifact name from the task above
           - task: ArchiveFiles@2
             displayName: 'Archive results'
