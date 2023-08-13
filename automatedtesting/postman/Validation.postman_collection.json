@@ -1,0 +1,143 @@
+{
+	"info": {
+		"name": "Validation_Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Success\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"access_token\");",
+							"});",
+							"var json = pm.response.json();",
+							"pm.environment.set(\"access_token\", json.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{client_secret}}",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "https://graph.microsoft.com/.default",
+							"type": "text"
+						},
+						{
+							"key": "tenant",
+							"value": "{{tenant_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": "https://login.microsoftonline.com/{{tenant_id}}/oauth2/v2.0/token"
+			},
+			"response": []
+		},
+		{
+			"name": "New Account",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Success\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"userPrincipalName\");\r",
+							"});\r",
+							"var json = pm.response.json();\r",
+							"pm.environment.set(\"user_id\", json.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"accountEnabled\": true,\r\n  \"displayName\": \"Mo User\",\r\n  \"mailNickname\": \"myoUser\",\r\n  \"userPrincipalName\": \"myoUser@nyjetssaucegardnergmail.onmicrosoft.com\",\r\n  \"passwordProfile\" : {\r\n    \"forceChangePasswordNextSignIn\": true,\r\n    \"password\": \"jsofeajdfs12!\"\r\n  }\r\n}"
+				},
+				"url": "https://graph.microsoft.com/v1.0/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Get new user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"User\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"userPrincipalName\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": "https://graph.microsoft.com/v1.0/users/{{user_id}}"
+			},
+			"response": []
+		}
+	]
+}
