@@ -113,7 +113,7 @@ stages:
       displayName: Run Data Validation Tests
       continueOnError: true
       inputs:
-        script: 'newman run Validation.postman_collection.json -e Postman.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml --env-var "client_id=$(client_id)" --env-var "client_secret=$(client_secret)"'
+        script: 'newman run Validation.postman_collection.json -e Postman_environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml --env-var "client_id=$(client_id)" --env-var "client_secret=$(client_secret)"'
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     # Postman Regression Test Suite    
     # ToDo: Verify the working directory
@@ -121,7 +121,7 @@ stages:
       displayName: Run Regression Tests
       continueOnError: true
       inputs:
-        script: 'newman run Regression.postman_collection.json -e Postman.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml --env-var "client_id=$(client_id)" --env-var "client_secret=$(client_secret)"' 
+        script: 'newman run Regression.postman_collection.json -e Postman_environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml --env-var "client_id=$(client_id)" --env-var "client_secret=$(client_secret)"' 
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
     # Postman - Publish Results 
     # ToDo: Complete the task as explained here: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=trx%2Cyaml#yaml-snippet
