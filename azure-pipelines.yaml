@@ -168,7 +168,7 @@ stages:
     - task: ArchiveFiles@2
       displayName: 'Archive PerformanceTestSuite'
       inputs:
-        rootFolderOrFile: 
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter'
         includeRootFolder: false
         archiveType: 'zip'
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip'
@@ -209,7 +209,7 @@ stages:
                 export PATH=$PATH:$JAVA_HOME/bin
                 wget "https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.2.tgz"
                 tar -xf apache-jmeter-5.6.2.tgz
-                unzip -o $(Build.BuildId)-perftests.zip
+                #unzip -o $(Build.BuildId)-perftests.zip
                 ./apache-jmeter-5.6.2/bin/jmeter -n -t UdacityStest.jmx -j jmeter.log -l stress_results.log -f -e -o Dashboard
                 cat jmeter.log 
               workingDirectory: '$(Pipeline.Workspace)/drop-perftests'            # ToDo: Use the artifact name from the task above
