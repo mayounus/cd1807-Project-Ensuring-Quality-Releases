@@ -296,7 +296,7 @@ stages:
             displayName: Regression postman tests
             continueOnError: true
             inputs:
-              script: 'newman run PostDeploymentRegressionpostman_collection.json -e postman_environment.json --reporters cli,junit --reporter-junit-export postRegression.xml --env-var "client_id=$(client_id)" --env-var "client_secret=$(client_secret)"'
+              script: 'newman run PostDeploymentRegressionpostman_collection.json -e Postman_environment.json --reporters cli,junit --reporter-junit-export postRegression.xml --env-var "client_id=$(client_id)" --env-var "client_secret=$(client_secret)"'
               workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
           # Postman - Publish Results now that it's enabled
           # ToDo: Complete the task as explained here: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=trx%2Cyaml#yaml-snippet

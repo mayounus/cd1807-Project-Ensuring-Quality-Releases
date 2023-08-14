@@ -116,7 +116,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "https://devopsapplication-appservice.azurewebsites.net/api/books"
+				"url": "https://moapplication2-appservice.azurewebsites.net/api/books"
 			},
 			"response": []
 		},
