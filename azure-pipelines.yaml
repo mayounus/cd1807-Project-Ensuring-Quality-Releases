@@ -269,3 +269,51 @@ stages:
                 python3 add_remove_from_cart.py >> selenium.log
                 echo "Selenium test complete. Check selenium.log for results."
                 cat selenium.log
+  - deployment: PostmanTests
+    dependsOn: FakeRestAPI
+    pool: myAgentPool
+    environment: $(environmentName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: CmdLine@2
+            displayName: Newman Instlal
+            inputs:
+              script: 'sudo npm install -g newman'
+              workingDirectory: $(System.DefaultWorkingDirectory)
+        # Postman Data Validation Test Suite    
+        # ToDo: Verify the working directory
+          - task: CmdLine@2
+            displayName: Validation postman tests
+            continueOnError: true
+            inputs:
+              script: 'newman run PostDeploymentValidationpostman_collection.json -e Postman_environment.json --reporters cli,junit --reporter-junit-export postmanValidation.xml --env-var "client_id=$(client_id)" --env-var "client_secret=$(client_secret)"'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+          # Postman Regression Test Suite    
+          # ToDo: Verify the working directory
+          - task: CmdLine@2
+            displayName: Regression postman tests
+            continueOnError: true
+            inputs:
+              script: 'newman run PostDeploymentRegressionpostman_collection.json -e postman_environment.json --reporters cli,junit --reporter-junit-export postRegression.xml --env-var "client_id=$(client_id)" --env-var "client_secret=$(client_secret)"'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+          # Postman - Publish Results now that it's enabled
+          # ToDo: Complete the task as explained here: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/test/publish-test-results?view=azure-devops&tabs=trx%2Cyaml#yaml-snippet
+          - task: PublishTestResults@2
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/*.xml'
+              searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+              mergeTestResults: true
+              testRunTitle: 'PostDeploy Results'
+          - task: ArchiveFiles@2
+            displayName: 'Postman result'
+            inputs:
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
+              includeRootFolder: true
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-postdeploy-postman.zip'
+          - publish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-postdeploy-postman.zip'
+            displayName: 'Upload Postman logs'
+            artifact: deploy-postman
